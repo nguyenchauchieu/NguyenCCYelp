@@ -26,6 +26,7 @@ class BusinessesViewController: UIViewController {
         
         // Add SearchBar to the NavigationBar
         searchBar.sizeToFit()
+        searchBar.placeholder = "Search"
         navigationItem.titleView = searchBar
         
         businessTableView.delegate = self
@@ -54,12 +55,14 @@ class BusinessesViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let navigationController = segue.destination as! UINavigationController
-//        let settingController = navigationController.viewControllers.first as! SettingsViewController
-//        settingController.delegate = self
-        let detailController = segue.destination as! DetailViewController
-        let indexPath = businessTableView.indexPathForSelectedRow!
-        detailController.business = businesses[indexPath.row]
+        if let navigationController = segue.destination as? UINavigationController {
+            let settingController = navigationController.viewControllers.first as! SettingsViewController
+            settingController.delegate = self
+        }
+        if let detailController = segue.destination as? DetailViewController {
+            let indexPath = businessTableView.indexPathForSelectedRow!
+            detailController.business = businesses[indexPath.row]
+        }
     }
 }
 

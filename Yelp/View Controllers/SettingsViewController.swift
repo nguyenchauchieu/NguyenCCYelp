@@ -25,7 +25,7 @@ class SettingsViewController: UIViewController {
     var isSortCollapse = true
     var currentDistanceIndex = 2
     var currentSortIndex = 0
-    var isCategoryCollapse = false
+    var isCategoryCollapse = true
     
     var delegate: SettingViewControllerDelegate!
     
@@ -128,6 +128,20 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource, Sw
             cell.dropDownImageView.image = UIImage(named: "arrow_down_icon")
             return cell
         default:
+            if isCategoryCollapse {
+                if indexPath.row <= 2 {
+                    let cell = settingsTableView.dequeueReusableCell(withIdentifier: "SwitchCell") as! SwitchTableViewCell
+                    let label = Constants.CATEGORIES[indexPath.row]["name"]!
+                    cell.switchLabel.text = "\(label)"
+                    cell.delegate = self
+                    cell.switchButton.isOn = switchStates[indexPath.row] ?? false
+                    return cell
+                }
+                if indexPath.row == 3 {
+                    let cell = settingsTableView.dequeueReusableCell(withIdentifier: "ShowAllCell") as! ShowAllTableViewCell
+                    return cell
+                }
+            }
             let cell = settingsTableView.dequeueReusableCell(withIdentifier: "SwitchCell") as! SwitchTableViewCell
             let label = Constants.CATEGORIES[indexPath.row]["name"]!
             cell.switchLabel.text = "\(label)"
@@ -175,7 +189,11 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource, Sw
                 filterSettings.sort = Int(Constants.SORTS[indexPath.row]["value"]!)
                 reloadSection(indexPath: indexPath)
             }
-        case 3: break
+        case 3:
+            if isCategoryCollapse && indexPath.row == 3 {
+                isCategoryCollapse = false
+                reloadSection(indexPath: indexPath)
+            }
         default: break
         }
     }
@@ -221,10 +239,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource, Sw
                         height = 44
                     }
                 default:
-                    if isCategoryCollapse && indexPath.row <= 2 {
+                    if isCategoryCollapse && indexPath.row <= 3 {
                         height = 44
                     }
-                    if isCategoryCollapse && indexPath.row > 2 {
+                    if isCategoryCollapse && indexPath.row > 3 {
                         height = 0
                     }
                     if !isCategoryCollapse {
