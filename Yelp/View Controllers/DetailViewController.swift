@@ -24,7 +24,7 @@ class DetailViewController: UIViewController {
 
         nameLabel.text = business?.name
         imageView.setImageWith((business?.imageURL)!)
-        distanceLabel.text = business?.distance
+        distanceLabel.text = "\(business!.distance!)les from here"
         ratingImageView.setImageWith((business?.ratingImageURL)!)
         ratingCountLabel.text = "\(String(describing: business!.reviewCount!))"
         addressLabel.text = business?.address
